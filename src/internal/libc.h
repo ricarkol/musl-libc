@@ -46,7 +46,8 @@ hidden void __libc_exit_fini(void);
 hidden void __fork_handler(int);
 
 extern hidden size_t __hwcap;
-extern hidden size_t __sysinfo;
+//extern hidden size_t __sysinfo;
+extern size_t __sysinfo;
 extern char *__progname, *__progname_full;
 
 extern hidden const char __libc_version[];
