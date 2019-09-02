@@ -9,6 +9,7 @@
 .global __syscall_cp_asm
 .hidden __syscall_cp_asm
 .type   __syscall_cp_asm,@function
+
 __syscall_cp_asm:
 
 __cp_begin:
@@ -24,7 +25,9 @@ __cp_begin:
 	mov 8(%rsp),%r8
 	mov 16(%rsp),%r9
 	mov %r11,8(%rsp)
-	syscall
+	mov $-1,%eax
+	//syscall
+	//call *__sysinfo
 __cp_end:
 	ret
 __cp_cancel:
