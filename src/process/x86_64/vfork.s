@@ -1,6 +1,6 @@
-.global vfork
-.type vfork,@function
-vfork:
+.global vfork_asm
+.type vfork_asm,@function
+vfork_asm:
 	pop %rdx
 	mov $58,%eax
 	syscall

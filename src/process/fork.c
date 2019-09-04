@@ -5,11 +5,31 @@
 #include "libc.h"
 #include "pthread_impl.h"
 
+#define KML
+#ifdef KML
+extern unsigned long __sysinfo;
+#endif
+
 static void dummy(int x)
 {
 }
 
 weak_alias(dummy, __fork_handler);
+
+static __inline long __vfork()
+{
+	unsigned long ret = -1;
+        __asm__ __volatile__ ("popq %%rdx; call *%1; pushq %%rdx" : "=a"(ret) : "r"(__sysinfo), "a"(SYS_vfork) : "rcx", "r11", "memory", "rdx");
+        return ret;
+}
+
+pid_t vfork(void)
+{
+	int d;
+	//pid_t ret = __syscall(SYS_vfork);
+	pid_t ret = __vfork(SYS_vfork);
+	return __syscall_ret(ret);
+}
 
 pid_t fork(void)
 {
