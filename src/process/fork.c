@@ -16,19 +16,28 @@ static void dummy(int x)
 
 weak_alias(dummy, __fork_handler);
 
-static __inline long __vfork()
+#if 0
+__attribute__ ((noinline)) long __vfork()
 {
 	unsigned long ret = -1;
-        __asm__ __volatile__ ("popq %%rdx; call *%1; pushq %%rdx" : "=a"(ret) : "r"(__sysinfo), "a"(SYS_vfork) : "rcx", "r11", "memory", "rdx");
+        __asm__ __volatile__ ("popq %%rdx; call *%1; pushq %%rdx" : "=a"(ret) : "r"(__sysinfo), "a"(SYS_vfork) : "rcx", "r11", "memory");
         return ret;
 }
 
+/*
+ * This does not work, we need the return PC to be in rdx. Basically, we need the exact same code
+ * as in src/process/x86_64/vfork.s
+ */
 pid_t vfork(void)
 {
-	int d;
-	//pid_t ret = __syscall(SYS_vfork);
-	pid_t ret = __vfork(SYS_vfork);
+	pid_t ret = __vfork();
 	return __syscall_ret(ret);
+}
+#endif
+
+pid_t vfork(void)
+{
+	__asm__ __volatile__ ("popq %%rdx; call *%0; pushq %%rdx" :: "r"(__sysinfo), "a"(SYS_vfork) : "rcx", "r11", "memory", "rdx");
 }
 
 pid_t fork(void)
