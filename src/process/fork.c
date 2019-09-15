@@ -37,7 +37,9 @@ pid_t vfork(void)
 
 pid_t vfork(void)
 {
-	__asm__ __volatile__ ("popq %%rdx; call *%0; pushq %%rdx" :: "r"(__sysinfo), "a"(SYS_vfork) : "rcx", "r11", "memory", "rdx");
+	//__asm__ __volatile__ ("popq %%rdx; call *%0; pushq %%rdx" :: "r"(__sysinfo), "a"(SYS_vfork) : "rcx", "r11", "memory", "rdx");
+	__asm__ __volatile__ ("popq %%rdx; call *%0; pushq %%rdx; jmp __syscall_ret"
+			:: "r"(__sysinfo), "a"(SYS_vfork) : "rcx", "r11", "memory", "rdx");
 }
 
 pid_t fork(void)
