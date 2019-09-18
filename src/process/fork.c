@@ -35,11 +35,18 @@ pid_t vfork(void)
 }
 #endif
 
-pid_t vfork(void)
+#define USE_SYSCALL_RET
+
+void vfork(void)
 {
-	//__asm__ __volatile__ ("popq %%rdx; call *%0; pushq %%rdx" :: "r"(__sysinfo), "a"(SYS_vfork) : "rcx", "r11", "memory", "rdx");
-	__asm__ __volatile__ ("popq %%rdx; call *%0; pushq %%rdx; jmp __syscall_ret"
-			:: "r"(__sysinfo), "a"(SYS_vfork) : "rcx", "r11", "memory", "rdx");
+	// this works for some reason in busybox cat
+	//__asm__ __volatile__ ("popq %%rdx; call *%0; pushq %%rdx; jmp __syscall_ret"
+#ifdef USE_SYSCALL_RET
+	__asm__ __volatile__ ("popq %%rdx; call *%0; pushq %%rdx; movq %%rax,%%rdi; jmp __syscall_ret"
+			:: "r"(__sysinfo), "a"(SYS_vfork) : "rcx", "r11", "memory", "rdx", "rdi");
+#else
+	__asm__ __volatile__ ("popq %%rdx; call *%0; pushq %%rdx" :: "r"(__sysinfo), "a"(SYS_vfork) : "rcx", "r11", "memory", "rdx");
+#endif
 }
 
 pid_t fork(void)
