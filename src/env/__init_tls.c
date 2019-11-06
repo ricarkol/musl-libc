@@ -11,11 +11,23 @@
 
 volatile int __thread_list_lock;
 
+extern unsigned long __sysinfo;
+
+int __set_thread_area2(void *p)
+{
+	int ret = 0;
+	if (__sysinfo) {
+		ret = __syscall2(158, 0x1002, p);
+	} else
+		ret = __set_thread_area(p);
+	return ret;
+}
+
 int __init_tp(void *p)
 {
 	pthread_t td = p;
 	td->self = td;
-	int r = __set_thread_area(TP_ADJ(p));
+	int r = __set_thread_area2(TP_ADJ(p));
 	if (r < 0) return -1;
 	if (!r) libc.can_do_threads = 1;
 	td->detach_state = DT_JOINABLE;

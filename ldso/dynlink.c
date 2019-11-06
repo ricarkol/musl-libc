@@ -1658,6 +1658,15 @@ hidden void __dls2(unsigned char *base, size_t *sp)
 
 void __dls2b(size_t *sp)
 {
+	char **argv = (void *)(sp+1);
+	int argc = *sp;
+	size_t aux[AUX_CNT], *auxv;
+	size_t i;
+
+	for (i=argc+1; argv[i]; i++);
+	auxv = (void *)(argv+i+1);
+	search_vec(auxv, &__sysinfo, AT_SYSINFO);
+
 	/* Setup early thread pointer in builtin_tls for ldso/libc itself to
 	 * use during dynamic linking. If possible it will also serve as the
 	 * thread pointer at runtime. */
