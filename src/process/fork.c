@@ -5,49 +5,11 @@
 #include "libc.h"
 #include "pthread_impl.h"
 
-#define KML
-#ifdef KML
-extern unsigned long __sysinfo;
-#endif
-
 static void dummy(int x)
 {
 }
 
 weak_alias(dummy, __fork_handler);
-
-#if 0
-__attribute__ ((noinline)) long __vfork()
-{
-	unsigned long ret = -1;
-        __asm__ __volatile__ ("popq %%rcx; call *%1; pushq %%rcx" : "=a"(ret) : "r"(__sysinfo), "a"(SYS_vfork) : "rcx", "r11", "memory");
-        return ret;
-}
-
-/*
- * This does not work, we need the return PC to be in rcx. Basically, we need the exact same code
- * as in src/process/x86_64/vfork.s
- */
-pid_t vfork(void)
-{
-	pid_t ret = __vfork();
-	return __syscall_ret(ret);
-}
-#endif
-
-#define USE_SYSCALL_RET
-
-void vfork(void)
-{
-	// this works for some reason in busybox cat
-	//__asm__ __volatile__ ("popq %%rcx; call *%0; pushq %%rcx; jmp __syscall_ret"
-#ifdef USE_SYSCALL_RET
-	__asm__ __volatile__ ("popq %%rcx; call *%0; pushq %%rcx; movq %%rax,%%rdi; jmp __syscall_ret"
-			:: "r"(__sysinfo), "a"(SYS_vfork) : "rcx", "r11", "memory", "rdi");
-#else
-	__asm__ __volatile__ ("popq %%rcx; call *%0; pushq %%rcx" :: "r"(__sysinfo), "a"(SYS_vfork) : "rcx", "r11", "memory");
-#endif
-}
 
 pid_t fork(void)
 {
