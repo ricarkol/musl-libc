@@ -20,12 +20,12 @@ weak_alias(dummy, __fork_handler);
 __attribute__ ((noinline)) long __vfork()
 {
 	unsigned long ret = -1;
-        __asm__ __volatile__ ("popq %%rdx; call *%1; pushq %%rdx" : "=a"(ret) : "r"(__sysinfo), "a"(SYS_vfork) : "rcx", "r11", "memory");
+        __asm__ __volatile__ ("popq %%rcx; call *%1; pushq %%rcx" : "=a"(ret) : "r"(__sysinfo), "a"(SYS_vfork) : "rcx", "r11", "memory");
         return ret;
 }
 
 /*
- * This does not work, we need the return PC to be in rdx. Basically, we need the exact same code
+ * This does not work, we need the return PC to be in rcx. Basically, we need the exact same code
  * as in src/process/x86_64/vfork.s
  */
 pid_t vfork(void)
@@ -40,12 +40,12 @@ pid_t vfork(void)
 void vfork(void)
 {
 	// this works for some reason in busybox cat
-	//__asm__ __volatile__ ("popq %%rdx; call *%0; pushq %%rdx; jmp __syscall_ret"
+	//__asm__ __volatile__ ("popq %%rcx; call *%0; pushq %%rcx; jmp __syscall_ret"
 #ifdef USE_SYSCALL_RET
-	__asm__ __volatile__ ("popq %%rdx; call *%0; pushq %%rdx; movq %%rax,%%rdi; jmp __syscall_ret"
-			:: "r"(__sysinfo), "a"(SYS_vfork) : "rcx", "r11", "memory", "rdx", "rdi");
+	__asm__ __volatile__ ("popq %%rcx; call *%0; pushq %%rcx; movq %%rax,%%rdi; jmp __syscall_ret"
+			:: "r"(__sysinfo), "a"(SYS_vfork) : "rcx", "r11", "memory", "rdi");
 #else
-	__asm__ __volatile__ ("popq %%rdx; call *%0; pushq %%rdx" :: "r"(__sysinfo), "a"(SYS_vfork) : "rcx", "r11", "memory", "rdx");
+	__asm__ __volatile__ ("popq %%rcx; call *%0; pushq %%rcx" :: "r"(__sysinfo), "a"(SYS_vfork) : "rcx", "r11", "memory");
 #endif
 }
 
