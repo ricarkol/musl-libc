@@ -36,7 +36,7 @@ int __clone(int (*func)(void *), void *stack, int flags, void *arg, ...)
 
 	pid = syscall5(SYS_clone, flags, s, ptid, ctid, tls);
 	if (pid == 0) {
-		func(stack);
+		func(arg);
 		__syscall1(SYS_exit, 0);
 	}
 	return pid;
