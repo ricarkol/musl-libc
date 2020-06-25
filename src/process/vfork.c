@@ -3,8 +3,7 @@
 #include <signal.h>
 #include "syscall.h"
 
-#define KML
-#ifdef KML
+#ifdef CONFIG_NOMMU
 extern unsigned long __sysinfo;
 
 /* Can't make this pure assembly as it can't use __sysinfo from it. */
