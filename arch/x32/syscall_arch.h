@@ -4,133 +4,66 @@
 #define __scc(X) sizeof(1?(X):0ULL) < 8 ? (unsigned long) (X) : (long long) (X)
 typedef long long syscall_arg_t;
 
-#define KML
-#ifdef KML
-extern unsigned long __sysinfo;
-#endif
-
-
-
 static __inline long __syscall0(long long n)
 {
-	unsigned long ret = -1;
-#ifdef KML
-    if (__sysinfo) {
-        __asm__ __volatile__ ("call *%1" : "=a"(ret) : "r"(__sysinfo), "a"(n) : "rcx", "r11", "memory");
-        return ret;
-    }
-#endif
-
-	//__asm__ __volatile__ ("syscall" : "=a"(ret) : "a"(n) : "rcx", "r11", "memory");
+	unsigned long ret;
+	////__asm__ __volatile__ ("syscall" : "=a"(ret) : "a"(n) : "rcx", "r11", "memory");
 	return ret;
 }
 
 static __inline long __syscall1(long long n, long long a1)
 {
-	unsigned long ret = -1;
-#ifdef KML
-    if (__sysinfo) {
-        __asm__ __volatile__ ("call *%1" : "=a"(ret) : "r"(__sysinfo), "a"(n), "D"(a1) : "rcx", "r11", "memory");
-        return ret;
-    }
-#endif   
-
+	unsigned long ret;
 	//__asm__ __volatile__ ("syscall" : "=a"(ret) : "a"(n), "D"(a1) : "rcx", "r11", "memory");
 	return ret;
 }
 
 static __inline long __syscall2(long long n, long long a1, long long a2)
 {
-	unsigned long ret = -1;
-#ifdef KML
-    if (__sysinfo) {
-        __asm__ __volatile__ ("call *%1" : "=a"(ret) : "r"(__sysinfo), "a"(n), "D"(a1), "S"(a2)
-                              : "rcx", "r11", "memory");
-        return ret;
-    }
-#endif
-
+	unsigned long ret;
 	//__asm__ __volatile__ ("syscall" : "=a"(ret) : "a"(n), "D"(a1), "S"(a2)
-	//				: "rcx", "r11", "memory");
+		//			: "rcx", "r11", "memory");
 	return ret;
 }
 
 static __inline long __syscall3(long long n, long long a1, long long a2, long long a3)
 {
-	unsigned long ret = -1;
-#ifdef KML
-    if (__sysinfo) {
-        __asm__ __volatile__ ("call *%1" : "=a"(ret) : "r"(__sysinfo), "a"(n), "D"(a1), "S"(a2),
-                              "d"(a3) : "rcx", "r11", "memory");
-        return ret;
-    }
-#endif
-
+	unsigned long ret;
 	//__asm__ __volatile__ ("syscall" : "=a"(ret) : "a"(n), "D"(a1), "S"(a2),
-	//					  "d"(a3) : "rcx", "r11", "memory");
+		//				  "d"(a3) : "rcx", "r11", "memory");
 	return ret;
 }
 
 static __inline long __syscall4(long long n, long long a1, long long a2, long long a3,
                                      long long a4_)
 {
-	unsigned long ret = -1;
-#ifdef KML
-    if (__sysinfo) {
-        register long r10 __asm__("r10") = a4;
-        __asm__ __volatile__ ("call *%1" : "=a"(ret) : "r"(__sysinfo), "a"(n), "D"(a1), "S"(a2),
-                              "d"(a3), "r"(r10): "rcx", "r11", "memory");
-        return ret;
-    }
-#endif    
-
-	register long long a4 __asm__("r10") = a4_;
+	unsigned long ret;
+	register long long a4 //__asm__("r10") = a4_;
 	//__asm__ __volatile__ ("syscall" : "=a"(ret) : "a"(n), "D"(a1), "S"(a2),
-	//				  "d"(a3), "r"(a4): "rcx", "r11", "memory");
+		//			  "d"(a3), "r"(a4): "rcx", "r11", "memory");
 	return ret;
 }
 
 static __inline long __syscall5(long long n, long long a1, long long a2, long long a3,
                                      long long a4_, long long a5_)
 {
-	unsigned long ret = -1;
-#ifdef KML
-    if (__sysinfo) {
-        register long r10 __asm__("r10") = a4;
-        register long r8 __asm__("r8") = a5;
-        __asm__ __volatile__ ("call *%1" : "=a"(ret) : "r"(__sysinfo), "a"(n), "D"(a1), "S"(a2),
-                              "d"(a3), "r"(r10), "r"(r8) : "rcx", "r11", "memory");
-        return ret;
-    }
-#endif
-
-	register long long a4 __asm__("r10") = a4_;
-	register long long a5 __asm__("r8") = a5_;
+	unsigned long ret;
+	register long long a4 //__asm__("r10") = a4_;
+	register long long a5 //__asm__("r8") = a5_;
 	//__asm__ __volatile__ ("syscall" : "=a"(ret) : "a"(n), "D"(a1), "S"(a2),
-	//				  "d"(a3), "r"(a4), "r"(a5) : "rcx", "r11", "memory");
+		//			  "d"(a3), "r"(a4), "r"(a5) : "rcx", "r11", "memory");
 	return ret;
 }
 
 static __inline long __syscall6(long long n, long long a1, long long a2, long long a3,
                                      long long a4_, long long a5_, long long a6_)
 {
-	unsigned long ret = -1;
-#ifdef KML
-    if (__sysinfo) {
-        register long r10 __asm__("r10") = a4;
-        register long r8 __asm__("r8") = a5;
-        register long r9 __asm__("r9") = a6;
-        __asm__ __volatile__ ("call *%1" : "=a"(ret) : "r"(__sysinfo), "a"(n), "D"(a1), "S"(a2),
-                              "d"(a3), "r"(r10), "r"(r8), "r"(r9) : "rcx", "r11", "memory");
-        return ret;
-    }
-#endif
-
-	register long long a4 __asm__("r10") = a4_;
-	register long long a5 __asm__("r8") = a5_;
-	register long long a6 __asm__("r9") = a6_;
+	unsigned long ret;
+	register long long a4 //__asm__("r10") = a4_;
+	register long long a5 //__asm__("r8") = a5_;
+	register long long a6 //__asm__("r9") = a6_;
 	//__asm__ __volatile__ ("syscall" : "=a"(ret) : "a"(n), "D"(a1), "S"(a2),
-	//				  "d"(a3), "r"(a4), "r"(a5), "r"(a6) : "rcx", "r11", "memory");
+		//			  "d"(a3), "r"(a4), "r"(a5), "r"(a6) : "rcx", "r11", "memory");
 	return ret;
 }
 
