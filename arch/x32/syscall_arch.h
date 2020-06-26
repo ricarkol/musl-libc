@@ -7,30 +7,30 @@ typedef long long syscall_arg_t;
 static __inline long __syscall0(long long n)
 {
 	unsigned long ret;
-	////__asm__ __volatile__ ("syscall" : "=a"(ret) : "a"(n) : "rcx", "r11", "memory");
+	__asm__ __volatile__ ("syscall" : "=a"(ret) : "a"(n) : "rcx", "r11", "memory");
 	return ret;
 }
 
 static __inline long __syscall1(long long n, long long a1)
 {
 	unsigned long ret;
-	//__asm__ __volatile__ ("syscall" : "=a"(ret) : "a"(n), "D"(a1) : "rcx", "r11", "memory");
+	__asm__ __volatile__ ("syscall" : "=a"(ret) : "a"(n), "D"(a1) : "rcx", "r11", "memory");
 	return ret;
 }
 
 static __inline long __syscall2(long long n, long long a1, long long a2)
 {
 	unsigned long ret;
-	//__asm__ __volatile__ ("syscall" : "=a"(ret) : "a"(n), "D"(a1), "S"(a2)
-		//			: "rcx", "r11", "memory");
+	__asm__ __volatile__ ("syscall" : "=a"(ret) : "a"(n), "D"(a1), "S"(a2)
+					: "rcx", "r11", "memory");
 	return ret;
 }
 
 static __inline long __syscall3(long long n, long long a1, long long a2, long long a3)
 {
 	unsigned long ret;
-	//__asm__ __volatile__ ("syscall" : "=a"(ret) : "a"(n), "D"(a1), "S"(a2),
-		//				  "d"(a3) : "rcx", "r11", "memory");
+	__asm__ __volatile__ ("syscall" : "=a"(ret) : "a"(n), "D"(a1), "S"(a2),
+						  "d"(a3) : "rcx", "r11", "memory");
 	return ret;
 }
 
@@ -38,9 +38,9 @@ static __inline long __syscall4(long long n, long long a1, long long a2, long lo
                                      long long a4_)
 {
 	unsigned long ret;
-	register long long a4 //__asm__("r10") = a4_;
-	//__asm__ __volatile__ ("syscall" : "=a"(ret) : "a"(n), "D"(a1), "S"(a2),
-		//			  "d"(a3), "r"(a4): "rcx", "r11", "memory");
+	register long long a4 __asm__("r10") = a4_;
+	__asm__ __volatile__ ("syscall" : "=a"(ret) : "a"(n), "D"(a1), "S"(a2),
+					  "d"(a3), "r"(a4): "rcx", "r11", "memory");
 	return ret;
 }
 
@@ -48,10 +48,10 @@ static __inline long __syscall5(long long n, long long a1, long long a2, long lo
                                      long long a4_, long long a5_)
 {
 	unsigned long ret;
-	register long long a4 //__asm__("r10") = a4_;
-	register long long a5 //__asm__("r8") = a5_;
-	//__asm__ __volatile__ ("syscall" : "=a"(ret) : "a"(n), "D"(a1), "S"(a2),
-		//			  "d"(a3), "r"(a4), "r"(a5) : "rcx", "r11", "memory");
+	register long long a4 __asm__("r10") = a4_;
+	register long long a5 __asm__("r8") = a5_;
+	__asm__ __volatile__ ("syscall" : "=a"(ret) : "a"(n), "D"(a1), "S"(a2),
+					  "d"(a3), "r"(a4), "r"(a5) : "rcx", "r11", "memory");
 	return ret;
 }
 
@@ -59,11 +59,11 @@ static __inline long __syscall6(long long n, long long a1, long long a2, long lo
                                      long long a4_, long long a5_, long long a6_)
 {
 	unsigned long ret;
-	register long long a4 //__asm__("r10") = a4_;
-	register long long a5 //__asm__("r8") = a5_;
-	register long long a6 //__asm__("r9") = a6_;
-	//__asm__ __volatile__ ("syscall" : "=a"(ret) : "a"(n), "D"(a1), "S"(a2),
-		//			  "d"(a3), "r"(a4), "r"(a5), "r"(a6) : "rcx", "r11", "memory");
+	register long long a4 __asm__("r10") = a4_;
+	register long long a5 __asm__("r8") = a5_;
+	register long long a6 __asm__("r9") = a6_;
+	__asm__ __volatile__ ("syscall" : "=a"(ret) : "a"(n), "D"(a1), "S"(a2),
+					  "d"(a3), "r"(a4), "r"(a5), "r"(a6) : "rcx", "r11", "memory");
 	return ret;
 }
 
